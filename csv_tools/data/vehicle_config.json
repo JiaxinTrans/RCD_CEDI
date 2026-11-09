@@ -1,0 +1,22 @@
+{
+  "columns": {
+    "time_s": "time_s",
+    "vid": "vid",
+    "x": "x",
+    "y": "y",
+    "vx": "vx",
+    "vy": "vy",
+    "heading": "heading",
+    "length": "length",
+    "width": "width"
+  },
+  "vehicle": {
+    "road_min": 0.0,
+    "road_max": 10.5,
+    "lane_width": 3.5,
+    "ax_steps": 30,
+    "ay_steps": 30,
+    "sector_steps": 30
+  },
+  "static_polygon": null
+}

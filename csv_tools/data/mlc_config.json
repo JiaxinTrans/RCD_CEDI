@@ -1,0 +1,29 @@
+{
+  "columns": {
+    "time_s": "time_s",
+    "vid": "vid",
+    "x": "x",
+    "y": "y",
+    "vx": "vx",
+    "vy": "vy",
+    "heading": "heading",
+    "length": "length",
+    "width": "width"
+  },
+  "mlc": {
+    "zone_start": [
+      0.0,
+      0.0
+    ],
+    "zone_end": [
+      100.0,
+      3.5
+    ],
+    "lane_width": 3.5,
+    "lane_origin": 1.75,
+    "road_min_d": 0.0,
+    "road_max_d": 10.5,
+    "tau_steps": 30,
+    "ax_steps": 30
+  }
+}
