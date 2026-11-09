@@ -1,4 +1,4 @@
-# RCD_CEDI
+# A unified two-dimensional risk framework for highway work zone
 
 This repository implements a unified two-dimensional framework for risk quantification in highway work zones under intensive multi-vehicle interactions. The framework integrates Reachable Conflict Detection (RCD) and the Constrained Evasion Difficulty Index (CEDI), connecting conflict detectionn with vehicle risk assessment.
 
@@ -6,7 +6,7 @@ RCD evaluates both spatial interaction and conflict reachability, accounting for
 
 ## Research motivation
 
-### Why RCD matters ?
+### Why is it necessary to detect the reachability of conflicts ?
 
 Consider four vehicles traveling in the same lane, ordered from rear to front as A, B, C, and D, with decreasing speeds. Pairwise prediction may identify conflicts between A and all three vehicles ahead. However, B blocks A’s direct interactions with C and D. RCD checks whether each predicted conflict is reachable, excluding interactions blocked by surrounding vehicles.
 
@@ -45,20 +45,19 @@ The proposed 2D risk quantification framework for highway work zones comprises t
 
 Three cases from the main article illustrate conflict detection and risk evolution using historal trajectory data. The first visualization shows results from RCD and other conflict detection methods, while the second and third show risk evolution using CEDI and other safety measures. Each visualization includes the corresponding traffic scene. Two additional conflict cases are available in the [asset/gifs](asset/gifs).
 
-[![Case 1: Conflict detection](asset/case_1.gif)
+### Case 1: Conflict detection during a LC maneuver in a multi-vehicle work zone environment
+This case compares RCD with other conflict detection methods during an observed lane change by the subject vehicle in multi-vehicles.
+[![Case 1](asset/gifs/rcd_case1.gif)](asset/gifs/rcd_case1.gif?raw=true)
 
-This case compares RCD with other conflict detection methods during an observed lane change by the subject vehicle in multi-vehicle traffic.
 
 ### Case 2: Aggressive overtaking and MLC
+This case shows how CEDI captures emerging risk and reaches the top 20% threshold earlier, providing advance warning.
 [![Case 2](asset/gifs/cedi_case1.gif)](asset/gifs/cedi_case1.gif?raw=true)
 
-This case shows how CEDI captures emerging risk and reaches the top 20% threshold earlier, providing advance warning.
-
 ### Case 3: Conflicts with another vehicle and the work zone during a MLC
-
+This case shows how CEDI evaluates the subject and interacting vehicles separately, accounting for their respective driving environments and capturing risk asymmetry.
 [![Case_3](asset/gifs/cedi_case2.gif)](asset/gifs/cedi_case2.gif?raw=true)
 
-This case shows how CEDI evaluates the subject and interacting vehicles separately, accounting for their respective driving environments and capturing risk asymmetry.
 
 ## Installation
 
@@ -76,7 +75,7 @@ python -m pytest -q
 
 NumPy, Numba, and the test dependencies are installed automatically. The first CEDI call includes Numba compilation. Run a warm-up call before measuring execution time.
 
-## Four example in action
+## Three example in action
 
 Run the examples from the project root after installation. They create vehicle states directly and do not require CSV files.
 
@@ -223,70 +222,66 @@ All moving actors are rectangles with fixed body headings during prediction. Bod
 
 Vehicle IDs must be unique integers with absolute values no greater than `2**53`. Supply only the other vehicles in `surrounding`, excluding the subject and opponent. Synchronize trajectories and convert coordinates before calling the API.
 
-### CSV fields
+### CSV workflows
 
-The API accepts `VehicleState` objects and does not include a built-in CSV loader or require a fixed CSV header. The following headers are recommended for mapping trajectory data to the API. Rename or convert columns explicitly if your dataset uses a different format.
+CSV processing is provided in the separate [csv_tools](csv_tools/) package. Each workflow reads trajectories, organizes synchronized scenes, performs detection and risk assessment, and exports its results automatically.
 
-| Recommended CSV field | API mapping | Unit / meaning |
-|---|---|---|
-| `time_s` | Used by the caller to group frames | s; build a scene from synchronized states |
-| `vid` | `VehicleState.vid` | Unique integer vehicle ID |
-| `x`, `y` | `x`, `y` | Rectangle center coordinates, m |
-| `vx`, `vy` | `vx`, `vy` | Velocity components, m/s |
-| `heading` | `heading` | Body heading, rad |
-| `length`, `width` | `length`, `width` | Positive vehicle dimensions, m |
+| Workflow | Entry point | Sample trajectories | Configuration |
+|---|---|---|---|
+| MLC | [mlc.py](csv_tools/mlc.py) | [trajectories_mlc.csv](csv_tools/data/trajectories_mlc.csv) | [mlc_config.json](csv_tools/data/mlc_config.json) |
+| Vehicle conflict | [vehicle.py](csv_tools/vehicle.py) | [trajectories_vehicle.csv](csv_tools/data/trajectories_vehicle.csv) | [vehicle_config.json](csv_tools/data/vehicle_config.json) |
 
-Example format:
+After installation, run from the repository root:
 
-```csv
-time_s,vid,x,y,vx,vy,heading,length,width
-0.0,1,0.0,1.75,10.0,0.0,0.0,4.0,2.0
-0.0,2,20.0,1.75,0.0,0.0,0.0,4.0,2.0
+```powershell
+# MLC: work-zone P1 detection, followed by CEDI; no P2 test
+python -m csv_tools.mlc --input csv_tools/data/trajectories_mlc.csv --ego 1 --output mlc_results.csv
+
+# Vehicle conflict: RCD P1/P2, followed by CEDI for both vehicles
+python -m csv_tools.vehicle --input csv_tools/data/trajectories_vehicle.csv --ego 1 --other 2 --both --output vehicle_results.csv
 ```
 
-Read and convert using the Python standard library:
+Replace the input path and vehicle IDs for your own data. Add `--config csv_tools/data/mlc_config.json` or `--config csv_tools/data/vehicle_config.json` to override the corresponding settings. Unspecified parameters retain the package defaults, including the 30-step search settings. The `columns` mapping supports other CSV header names. MLC uses `zone_start` and `zone_end`; the vehicle configuration can include a convex `static_polygon`.
 
-```python
-import csv
-from rcd_cedi import VehicleState
+**MLC detection:** only P1 is checked, using the existing constant-velocity contact model for the finite work-zone boundary. A positive finite contact time triggers CEDI. No predicted contact gives CEDI 0; initial contact remains unscored. No P2 or new ET/horizon acceptance threshold is applied. All same-frame surrounding vehicles are retained in the MLC solver.
 
-frames = {}
-with open("vehicle_states.csv", newline="", encoding="utf-8-sig") as f:
-    for row in csv.DictReader(f):
-        time_s = float(row["time_s"])
-        state = VehicleState(
-            vid=int(row["vid"]),
-            **{key: float(row[key]) for key in
-               ("x", "y", "vx", "vy", "heading", "length", "width")},
-        )
-        frames.setdefault(time_s, []).append(state)
-```
+**Vehicle conflict detection:** RCD checks P1 and, where applicable, P2 before CEDI. Only a `reachable` pair is scored. Other detection statuses remain visible as `skipped_rcd_...`, with blank CEDI. Omit `--both` to score only the subject vehicle. A missing opponent is recorded explicitly.
 
-This snippet only maps fields. Select the subject, opponent, and surrounding vehicles before evaluation. Align timestamps before grouping; do not mix states from different times. Road and work-zone geometry are supplied through configuration objects rather than repeated in every vehicle row.
+### CSV input fields
 
-### Result fields and CSV export
+| Field | Unit / meaning |
+|---|---|
+| `time_s` | Time in seconds |
+| `vid` | Unique integer vehicle ID within a frame |
+| `x`, `y` | Rectangle center coordinates, m |
+| `vx`, `vy` | Velocity components, m/s |
+| `heading` | Body heading, rad |
+| `length`, `width` | Positive vehicle dimensions, m |
 
-| Field | Result type | Meaning |
-|---|---|---|
-| `status` | RCD / CEDI | Detection or solver status |
-| `subject_vehicle`, `opponent_vehicle` | RCD / CEDI | Vehicle IDs; the MLC opponent is `None` |
-| `initial_et` | RCD / CEDI | Initial predicted contact time, s; may be `None` |
-| `predicted_contact` | RCD | Whether contact is predicted |
-| `reachable` | RCD | Whether the conflict is reachable; `None` if unresolved |
-| `blockers`, `unresolved_vehicles` | RCD | Blocking vehicle IDs and unresolved initial-contact vehicle IDs |
-| `cedi` | CEDI | Dimensionless cost; `None` for an unscored state |
-| `ax`, `ay` | CEDI | Selected longitudinal/lateral acceleration, m/s² |
-| `front_demand`, `rear_demand` | CEDI | Aggregated front-related and rear-related demands, m/s² |
-| `responses` | CEDI | Surrounding-response details; MLC details are in `diagnostics` |
-| `diagnostics` | RCD / CEDI | Geometry, search, timing, and audit details |
+Coordinates and vehicle states are used as supplied: no shifting, rotation, interpolation, or rounding is performed. Provide synchronized timestamps. Equal numeric timestamps such as `0.1` and `0.10` are grouped together; nearby distinct times are not merged. Duplicate IDs within a frame are rejected. Frames without the selected subject are counted and skipped.
 
-### CSV export
+### CSV outputs
 
-See [export_csv.py](examples/export_csv.py) for a runnable example and the reusable `save_results()` helper. It exports the main RCD or CEDI result fields; unavailable values are left blank.
+Both workflows write the selected CSV and a `<output>.config.json` file recording the effective settings. Export is integrated; no separate export script is required.
 
-Run `python examples/export_csv.py` to save an RCD example to `result.csv`. The same helper also accepts CEDI results, including both results returned by `evaluate_vehicle_pair()`.
+| Fields | Meaning |
+|---|---|
+| `time_s`, `mode`, `subject_vehicle`, `opponent_vehicle` | Frame, workflow, and vehicle IDs; the MLC opponent is blank |
+| `status`, `rcd_status` | Assessment and detection statuses |
+| `p1`, `predicted_contact` | Predicted contact in the relevant model |
+| `p2_checked`, `reachable` | P2 evaluation and reachability; for MLC, `p2_checked=False` and `reachable` is blank |
+| `initial_et` | Initial predicted contact time, s |
+| `blockers`, `unresolved_vehicles` | Vehicle-conflict RCD diagnostics; semicolon-separated IDs |
+| `surrounding_count`, `surrounding_ids` | Same-frame surrounding vehicles used in evaluation |
+| `cedi`, `ax`, `ay` | CEDI is dimensionless; selected acceleration components `ax` and `ay` are in m/s² |
+| `front_demand`, `rear_demand` | Aggregated interaction demands, m/s² |
+| `waiting_time_s` | Selected MLC waiting time, s |
 
-### CEDI status values
+Blank CEDI means unscored or unavailable, not zero risk. Detailed nested response and solver diagnostics remain available through the Python API.
+
+### Core CEDI API status values
+
+These statuses describe the core API. The vehicle CSV workflow first applies RCD screening and uses `skipped_rcd_...` with blank CEDI for unscored pairs, as explained above.
 
 `initial_et` always refers to the initial contact forecast. The MLC remaining ET after waiting is available as `diagnostics["ET_s"]`; the vehicle conflict action duration is `diagnostics["planning_duration_s"]`.
 
@@ -302,7 +297,8 @@ Run `python examples/export_csv.py` to save an RCD example to `result.csv`. The 
 | `initial_SV_work_zone_overlap` | The subject vehicle initially overlaps the static constraint | `None` |
 | `initial_SV_road_boundary_violation` | The subject vehicle initially violates the road bounds | `None` |
 
-Failure to find an action in a finite search is not proof of physical infeasibility in continuous control space. The package does not automatically write CSV or JSON files.
+Failure to find an action in a finite search is not proof of physical infeasibility in continuous control space. The core in-memory API does not write files; the CSV workflows handle export.
+
 ## Source code responsibilities
 
 The modules below are located in `src/rcd_cedi/`.
@@ -319,8 +315,17 @@ The modules below are located in `src/rcd_cedi/`.
 | `api.py` / `__init__.py` | Public interfaces |
 
 ## Citation
-
-
+```yaml
+cff-version: 1.2.0
+message: "Please cite the software version used and the accompanying RCD-CEDI manuscript."
+type: software
+title: "RCD-CEDI: Reachable Conflict Detection and Constrained Evasion Difficulty Index"
+authors:
+  - family-names: Li
+    given-names: Jiaxin
+version: 0.1.1
+repository-code: "https://github.com/JiaxinTrans/RCD_CEDI"
+```
 
 ## License
 
