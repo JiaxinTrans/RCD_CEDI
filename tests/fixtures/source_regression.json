@@ -1,0 +1,1349 @@
+{
+  "description": "Expected outputs generated from unmodified supplied sources; timings removed.",
+  "sha256": {
+    "rcd_latest_csv(3).py": "af2a31bbea40a683f8bf2264707c9a161387d4f099bc2f6310fe0e990cd06c35",
+    "cedi_core(1).py": "a7834cf6296e0701d3a90a391ac22ab5e619e957abdac07c8d37e52a6bcf7b90",
+    "cedi_geometry(1).py": "0ecf35c7aa2bfb607de13dc203c8345cdc38b6b929d2adc01cb366b0bddfa8d8",
+    "cedi_first_trigger_ax(1).py": "cc80a6d2d1ddaf3de3f7ff492b8fb57bd538cc2b48d943a8b329557918f17e23",
+    "cedi_future_risk_verified(1).py": "9ca32e606236c4d30670916dc33ba826b5f72e5e2d7885c76eddc138dffdbf28",
+    "cedi_by_event(2).py": "e68653e267463a35a16603b6e51f5811a012a441cb713408251799c121c94126"
+  },
+  "vehicle_cases": [
+    {
+      "name": "pair_only",
+      "a": {
+        "vid": 1,
+        "x": 0,
+        "y": 1.875,
+        "vx": 10,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "b": {
+        "vid": 2,
+        "x": 20,
+        "y": 1.875,
+        "vx": 0,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "surrounding": [],
+      "config": {
+        "ax_steps": 9,
+        "ay_steps": 9,
+        "sector_steps": 3,
+        "horizon": 0.5,
+        "road_min": 0.0,
+        "road_max": 11.25,
+        "lane_width": 3.75
+      },
+      "factors": [
+        1.0,
+        2.0
+      ],
+      "polygon": [
+        [
+          1000.0,
+          0.0
+        ],
+        [
+          1010.0,
+          0.0
+        ],
+        [
+          1010.0,
+          1.0
+        ],
+        [
+          1000.0,
+          1.0
+        ]
+      ],
+      "expected": {
+        "subject_vehicle": 1,
+        "opponent_vehicle": 2,
+        "status": "feasible",
+        "CEDI": 0.5153882032022077,
+        "ax_mps2": -0.9196875000000002,
+        "ay_mps2": 1.4715000000000003,
+        "original_ET_s": 1.6,
+        "planning_duration_s": 1.6,
+        "expansion_factor": 1.0,
+        "expansion_level": 0,
+        "responses": [],
+        "attempts": [
+          {
+            "expansion_level": 1,
+            "factor": 2.0,
+            "n_candidates": 316,
+            "feasible": true,
+            "counters": {
+              "candidates": 32,
+              "SV_road": 11,
+              "SV_zone": 0,
+              "AB_contact": 10,
+              "terminal_AB": 10,
+              "surrounding_queries": 0,
+              "actual_contacts_before_trigger": 0,
+              "unsupported_gap_geometry": 0,
+              "rear_response_limit": 0,
+              "rear_response_static": 0,
+              "surrounding_contact": 0,
+              "front_contact": 0,
+              "future_braking_limit": 0,
+              "cost_pruned": 0,
+              "feasible_candidates": 1,
+              "own_bound_stop": 1
+            },
+            "search_rule": "minimum over the final nested candidate set"
+          }
+        ],
+        "tail_included": true,
+        "normalization_changed": false,
+        "terminal_AB_RCD_conflicts": 0,
+        "candidates_visited": 32,
+        "retained_action_audit": "passed"
+      }
+    },
+    {
+      "name": "rear_response",
+      "a": {
+        "vid": 1,
+        "x": 0,
+        "y": 1.875,
+        "vx": 10,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "b": {
+        "vid": 2,
+        "x": 20,
+        "y": 1.875,
+        "vx": 0,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "surrounding": [
+        {
+          "vid": 3,
+          "x": -15,
+          "y": 1.875,
+          "vx": 15,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        }
+      ],
+      "config": {
+        "ax_steps": 9,
+        "ay_steps": 9,
+        "sector_steps": 3,
+        "horizon": 0.5,
+        "road_min": 0.0,
+        "road_max": 11.25,
+        "lane_width": 3.75
+      },
+      "factors": [
+        1.0,
+        2.0
+      ],
+      "polygon": [
+        [
+          1000.0,
+          0.0
+        ],
+        [
+          1010.0,
+          0.0
+        ],
+        [
+          1010.0,
+          1.0
+        ],
+        [
+          1000.0,
+          1.0
+        ]
+      ],
+      "expected": {
+        "subject_vehicle": 1,
+        "opponent_vehicle": 2,
+        "status": "feasible",
+        "CEDI": 0.5153882032022077,
+        "ax_mps2": -0.9196875000000002,
+        "ay_mps2": 1.4715000000000003,
+        "original_ET_s": 1.6,
+        "planning_duration_s": 1.6,
+        "expansion_factor": 1.0,
+        "expansion_level": 0,
+        "responses": [
+          {
+            "vehicle_id": 3,
+            "role": "rear",
+            "first_trigger_s": 0.0,
+            "trigger_forecast_TTC_s": 2.2,
+            "C_response_ax_mps2": 0.0,
+            "within_ET_demand_mps2": 0.0,
+            "future_demand_mps2": 0.0,
+            "total_demand_mps2": 0.0,
+            "terminal_coast_TTC_s": null,
+            "tail_critical_elapsed_s": null,
+            "net_gap_at_trigger_m": 10.9899999,
+            "net_gap_at_end_m": null,
+            "within_ET_coast_contact_s": null,
+            "closing_speed_at_end_mps": 6.471500000000001,
+            "terminal_SV_direction_x": 0.9642516155060716,
+            "future_response_start_s": 0.0,
+            "demand_bearer": "following_C",
+            "normalized_demand": 0.0
+          }
+        ],
+        "attempts": [
+          {
+            "expansion_level": 1,
+            "factor": 2.0,
+            "n_candidates": 316,
+            "feasible": true,
+            "counters": {
+              "candidates": 32,
+              "SV_road": 11,
+              "SV_zone": 0,
+              "AB_contact": 10,
+              "terminal_AB": 10,
+              "surrounding_queries": 1,
+              "actual_contacts_before_trigger": 0,
+              "unsupported_gap_geometry": 0,
+              "rear_response_limit": 0,
+              "rear_response_static": 0,
+              "surrounding_contact": 0,
+              "front_contact": 0,
+              "future_braking_limit": 0,
+              "cost_pruned": 0,
+              "feasible_candidates": 1,
+              "own_bound_stop": 1
+            },
+            "search_rule": "minimum over the final nested candidate set"
+          }
+        ],
+        "tail_included": true,
+        "normalization_changed": false,
+        "terminal_AB_RCD_conflicts": 0,
+        "candidates_visited": 32,
+        "retained_action_audit": "passed"
+      }
+    },
+    {
+      "name": "target_front",
+      "a": {
+        "vid": 1,
+        "x": 0,
+        "y": 1.875,
+        "vx": 10,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "b": {
+        "vid": 2,
+        "x": 20,
+        "y": 1.875,
+        "vx": 0,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "surrounding": [
+        {
+          "vid": 3,
+          "x": 22,
+          "y": 5.625,
+          "vx": 0,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        }
+      ],
+      "config": {
+        "ax_steps": 9,
+        "ay_steps": 9,
+        "sector_steps": 3,
+        "horizon": 0.5,
+        "road_min": 0.0,
+        "road_max": 11.25,
+        "lane_width": 3.75
+      },
+      "factors": [
+        1.0,
+        2.0
+      ],
+      "polygon": [
+        [
+          1000.0,
+          0.0
+        ],
+        [
+          1010.0,
+          0.0
+        ],
+        [
+          1010.0,
+          1.0
+        ],
+        [
+          1000.0,
+          1.0
+        ]
+      ],
+      "expected": {
+        "subject_vehicle": 1,
+        "opponent_vehicle": 2,
+        "status": "feasible",
+        "CEDI": 0.5868516852829618,
+        "ax_mps2": -3.67875,
+        "ay_mps2": 0.7357499999999999,
+        "original_ET_s": 1.6,
+        "planning_duration_s": 1.6,
+        "expansion_factor": 1.0,
+        "expansion_level": 0,
+        "responses": [
+          {
+            "vehicle_id": 3,
+            "role": "front",
+            "first_trigger_s": 0.8,
+            "trigger_forecast_TTC_s": 2.5731566428814143,
+            "C_response_ax_mps2": 0.0,
+            "within_ET_demand_mps2": 0.0,
+            "future_demand_mps2": 1.3139864802129968,
+            "total_demand_mps2": 1.3139864802129968,
+            "terminal_coast_TTC_s": 1.6307243558580458,
+            "tail_critical_elapsed_s": null,
+            "net_gap_at_trigger_m": 11.1671999,
+            "net_gap_at_end_m": 6.6987999,
+            "within_ET_coast_contact_s": null,
+            "closing_speed_at_end_mps": 4.114,
+            "terminal_SV_direction_x": 0.9614145206101732,
+            "future_response_start_s": 1.6,
+            "demand_bearer": "SV_after_action",
+            "normalized_demand": 0.17859143461950347
+          }
+        ],
+        "attempts": [
+          {
+            "expansion_level": 1,
+            "factor": 2.0,
+            "n_candidates": 316,
+            "feasible": true,
+            "counters": {
+              "candidates": 42,
+              "SV_road": 16,
+              "SV_zone": 0,
+              "AB_contact": 12,
+              "terminal_AB": 10,
+              "surrounding_queries": 27,
+              "actual_contacts_before_trigger": 0,
+              "unsupported_gap_geometry": 0,
+              "rear_response_limit": 0,
+              "rear_response_static": 0,
+              "surrounding_contact": 0,
+              "front_contact": 0,
+              "future_braking_limit": 0,
+              "cost_pruned": 2,
+              "feasible_candidates": 2,
+              "own_bound_stop": 1
+            },
+            "search_rule": "minimum over the final nested candidate set"
+          }
+        ],
+        "tail_included": true,
+        "normalization_changed": false,
+        "terminal_AB_RCD_conflicts": 0,
+        "candidates_visited": 42,
+        "retained_action_audit": "passed"
+      }
+    },
+    {
+      "name": "two_surrounding",
+      "a": {
+        "vid": 1,
+        "x": 0,
+        "y": 1.875,
+        "vx": 10,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "b": {
+        "vid": 2,
+        "x": 20,
+        "y": 1.875,
+        "vx": 0,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "surrounding": [
+        {
+          "vid": 3,
+          "x": -15,
+          "y": 1.875,
+          "vx": 15,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        },
+        {
+          "vid": 4,
+          "x": 22,
+          "y": 5.625,
+          "vx": 0,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        }
+      ],
+      "config": {
+        "ax_steps": 9,
+        "ay_steps": 9,
+        "sector_steps": 3,
+        "horizon": 0.5,
+        "road_min": 0.0,
+        "road_max": 11.25,
+        "lane_width": 3.75
+      },
+      "factors": [
+        1.0,
+        2.0
+      ],
+      "polygon": [
+        [
+          1000.0,
+          0.0
+        ],
+        [
+          1010.0,
+          0.0
+        ],
+        [
+          1010.0,
+          1.0
+        ],
+        [
+          1000.0,
+          1.0
+        ]
+      ],
+      "expected": {
+        "subject_vehicle": 1,
+        "opponent_vehicle": 2,
+        "status": "feasible",
+        "CEDI": 0.7794580819104737,
+        "ax_mps2": -3.67875,
+        "ay_mps2": 0.7357499999999999,
+        "original_ET_s": 1.6,
+        "planning_duration_s": 1.6,
+        "expansion_factor": 1.0,
+        "expansion_level": 0,
+        "responses": [
+          {
+            "vehicle_id": 3,
+            "role": "rear",
+            "first_trigger_s": 0.0,
+            "trigger_forecast_TTC_s": 2.2,
+            "C_response_ax_mps2": -3.7743329666874716,
+            "within_ET_demand_mps2": 1.3428125781249998,
+            "future_demand_mps2": 3.7743329666874716,
+            "total_demand_mps2": 3.7743329666874716,
+            "terminal_coast_TTC_s": 0.0,
+            "tail_critical_elapsed_s": 2.8842182436156536,
+            "net_gap_at_trigger_m": 10.9899999,
+            "net_gap_at_end_m": -1.7188001000000002,
+            "within_ET_coast_contact_s": 1.4376559027538165,
+            "closing_speed_at_end_mps": 10.886,
+            "terminal_SV_direction_x": 0.9614145206101732,
+            "future_response_start_s": 0.0,
+            "demand_bearer": "following_C",
+            "normalized_demand": 0.5129912289075734
+          },
+          {
+            "vehicle_id": 4,
+            "role": "front",
+            "first_trigger_s": 0.8,
+            "trigger_forecast_TTC_s": 2.5731566428814143,
+            "C_response_ax_mps2": 0.0,
+            "within_ET_demand_mps2": 0.0,
+            "future_demand_mps2": 1.3139864802129968,
+            "total_demand_mps2": 1.3139864802129968,
+            "terminal_coast_TTC_s": 1.6307243558580458,
+            "tail_critical_elapsed_s": null,
+            "net_gap_at_trigger_m": 11.1671999,
+            "net_gap_at_end_m": 6.6987999,
+            "within_ET_coast_contact_s": null,
+            "closing_speed_at_end_mps": 4.114,
+            "terminal_SV_direction_x": 0.9614145206101732,
+            "future_response_start_s": 1.6,
+            "demand_bearer": "SV_after_action",
+            "normalized_demand": 0.17859143461950347
+          }
+        ],
+        "attempts": [
+          {
+            "expansion_level": 1,
+            "factor": 2.0,
+            "n_candidates": 316,
+            "feasible": true,
+            "counters": {
+              "candidates": 77,
+              "SV_road": 31,
+              "SV_zone": 0,
+              "AB_contact": 18,
+              "terminal_AB": 13,
+              "surrounding_queries": 74,
+              "actual_contacts_before_trigger": 0,
+              "unsupported_gap_geometry": 0,
+              "rear_response_limit": 0,
+              "rear_response_static": 0,
+              "surrounding_contact": 0,
+              "front_contact": 0,
+              "future_braking_limit": 3,
+              "cost_pruned": 10,
+              "feasible_candidates": 2,
+              "own_bound_stop": 1
+            },
+            "search_rule": "minimum over the final nested candidate set"
+          }
+        ],
+        "tail_included": true,
+        "normalization_changed": false,
+        "terminal_AB_RCD_conflicts": 0,
+        "candidates_visited": 77,
+        "retained_action_audit": "passed"
+      }
+    },
+    {
+      "name": "rotated_body",
+      "a": {
+        "vid": 1,
+        "x": 0,
+        "y": 1.875,
+        "vx": 10,
+        "vy": 0,
+        "heading": 0.03,
+        "length": 4,
+        "width": 2
+      },
+      "b": {
+        "vid": 2,
+        "x": 20,
+        "y": 1.875,
+        "vx": 0,
+        "vy": 0,
+        "heading": -0.02,
+        "length": 4,
+        "width": 2
+      },
+      "surrounding": [
+        {
+          "vid": 3,
+          "x": -18,
+          "y": 1.875,
+          "vx": 12,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        }
+      ],
+      "config": {
+        "ax_steps": 9,
+        "ay_steps": 9,
+        "sector_steps": 3,
+        "horizon": 0.5,
+        "road_min": 0.0,
+        "road_max": 11.25,
+        "lane_width": 3.75
+      },
+      "factors": [
+        1.0,
+        2.0
+      ],
+      "polygon": [
+        [
+          1000.0,
+          0.0
+        ],
+        [
+          1010.0,
+          0.0
+        ],
+        [
+          1010.0,
+          1.0
+        ],
+        [
+          1000.0,
+          1.0
+        ]
+      ],
+      "expected": {
+        "subject_vehicle": 1,
+        "opponent_vehicle": 2,
+        "status": "feasible",
+        "CEDI": 0.5153882032022077,
+        "ax_mps2": -0.9196875000000002,
+        "ay_mps2": 1.4715000000000003,
+        "original_ET_s": 1.5951710679063438,
+        "planning_duration_s": 1.5951710679063438,
+        "expansion_factor": 1.0,
+        "expansion_level": 0,
+        "responses": [
+          {
+            "vehicle_id": 3,
+            "role": "rear",
+            "first_trigger_s": 0.0,
+            "trigger_forecast_TTC_s": 6.985452216149764,
+            "C_response_ax_mps2": 0.0,
+            "within_ET_demand_mps2": 0.0,
+            "future_demand_mps2": 0.0,
+            "total_demand_mps2": 0.0,
+            "terminal_coast_TTC_s": null,
+            "tail_critical_elapsed_s": null,
+            "net_gap_at_trigger_m": 13.960904332299528,
+            "net_gap_at_end_m": null,
+            "within_ET_coast_contact_s": null,
+            "closing_speed_at_end_mps": 3.4670588915151157,
+            "terminal_SV_direction_x": 0.9641841440882224,
+            "future_response_start_s": 0.0,
+            "demand_bearer": "following_C",
+            "normalized_demand": 0.0
+          }
+        ],
+        "attempts": [
+          {
+            "expansion_level": 1,
+            "factor": 2.0,
+            "n_candidates": 316,
+            "feasible": true,
+            "counters": {
+              "candidates": 32,
+              "SV_road": 11,
+              "SV_zone": 0,
+              "AB_contact": 6,
+              "terminal_AB": 14,
+              "surrounding_queries": 1,
+              "actual_contacts_before_trigger": 0,
+              "unsupported_gap_geometry": 0,
+              "rear_response_limit": 0,
+              "rear_response_static": 0,
+              "surrounding_contact": 0,
+              "front_contact": 0,
+              "future_braking_limit": 0,
+              "cost_pruned": 0,
+              "feasible_candidates": 1,
+              "own_bound_stop": 1
+            },
+            "search_rule": "minimum over the final nested candidate set"
+          }
+        ],
+        "tail_included": true,
+        "normalization_changed": false,
+        "terminal_AB_RCD_conflicts": 0,
+        "candidates_visited": 32,
+        "retained_action_audit": "passed"
+      }
+    },
+    {
+      "name": "ET_exceeds_horizon",
+      "a": {
+        "vid": 1,
+        "x": 0,
+        "y": 1.875,
+        "vx": 10,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "b": {
+        "vid": 2,
+        "x": 50,
+        "y": 1.875,
+        "vx": 5,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "surrounding": [],
+      "config": {
+        "ax_steps": 9,
+        "ay_steps": 9,
+        "sector_steps": 3,
+        "horizon": 0.5,
+        "road_min": 0.0,
+        "road_max": 11.25,
+        "lane_width": 3.75
+      },
+      "factors": [
+        1.0,
+        2.0
+      ],
+      "polygon": [
+        [
+          1000.0,
+          0.0
+        ],
+        [
+          1010.0,
+          0.0
+        ],
+        [
+          1010.0,
+          1.0
+        ],
+        [
+          1000.0,
+          1.0
+        ]
+      ],
+      "expected": {
+        "subject_vehicle": 1,
+        "opponent_vehicle": 2,
+        "status": "feasible",
+        "CEDI": 0.12500000000000003,
+        "ax_mps2": -0.9196875000000002,
+        "ay_mps2": 0.0,
+        "original_ET_s": 9.2,
+        "planning_duration_s": 9.2,
+        "expansion_factor": 1.0,
+        "expansion_level": 0,
+        "responses": [],
+        "attempts": [
+          {
+            "expansion_level": 1,
+            "factor": 2.0,
+            "n_candidates": 316,
+            "feasible": true,
+            "counters": {
+              "candidates": 2,
+              "SV_road": 0,
+              "SV_zone": 0,
+              "AB_contact": 1,
+              "terminal_AB": 0,
+              "surrounding_queries": 0,
+              "actual_contacts_before_trigger": 0,
+              "unsupported_gap_geometry": 0,
+              "rear_response_limit": 0,
+              "rear_response_static": 0,
+              "surrounding_contact": 0,
+              "front_contact": 0,
+              "future_braking_limit": 0,
+              "cost_pruned": 0,
+              "feasible_candidates": 1,
+              "own_bound_stop": 1
+            },
+            "search_rule": "minimum over the final nested candidate set"
+          }
+        ],
+        "tail_included": true,
+        "normalization_changed": false,
+        "terminal_AB_RCD_conflicts": 0,
+        "candidates_visited": 2,
+        "retained_action_audit": "passed"
+      }
+    },
+    {
+      "name": "no_contact",
+      "a": {
+        "vid": 1,
+        "x": 0,
+        "y": 1.875,
+        "vx": 10,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "b": {
+        "vid": 2,
+        "x": 20,
+        "y": 5.625,
+        "vx": 0,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "surrounding": [],
+      "config": {
+        "ax_steps": 9,
+        "ay_steps": 9,
+        "sector_steps": 3,
+        "horizon": 0.5,
+        "road_min": 0.0,
+        "road_max": 11.25,
+        "lane_width": 3.75
+      },
+      "factors": [
+        1.0,
+        2.0
+      ],
+      "polygon": [
+        [
+          1000.0,
+          0.0
+        ],
+        [
+          1010.0,
+          0.0
+        ],
+        [
+          1010.0,
+          1.0
+        ],
+        [
+          1000.0,
+          1.0
+        ]
+      ],
+      "expected": {
+        "subject_vehicle": 1,
+        "opponent_vehicle": 2,
+        "status": "no_initial_AB_conflict",
+        "CEDI": 0.0,
+        "ax_mps2": null,
+        "ay_mps2": null,
+        "original_ET_s": null,
+        "planning_duration_s": null,
+        "expansion_factor": 1.0,
+        "expansion_level": 0,
+        "responses": [],
+        "attempts": [],
+        "tail_included": true,
+        "normalization_changed": false,
+        "terminal_AB_RCD_conflicts": null,
+        "candidates_visited": 0
+      }
+    },
+    {
+      "name": "initial_contact",
+      "a": {
+        "vid": 1,
+        "x": 0,
+        "y": 1.875,
+        "vx": 10,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "b": {
+        "vid": 2,
+        "x": 3,
+        "y": 1.875,
+        "vx": 0,
+        "vy": 0,
+        "heading": 0,
+        "length": 4,
+        "width": 2
+      },
+      "surrounding": [],
+      "config": {
+        "ax_steps": 9,
+        "ay_steps": 9,
+        "sector_steps": 3,
+        "horizon": 0.5,
+        "road_min": 0.0,
+        "road_max": 11.25,
+        "lane_width": 3.75
+      },
+      "factors": [
+        1.0,
+        2.0
+      ],
+      "polygon": [
+        [
+          1000.0,
+          0.0
+        ],
+        [
+          1010.0,
+          0.0
+        ],
+        [
+          1010.0,
+          1.0
+        ],
+        [
+          1000.0,
+          1.0
+        ]
+      ],
+      "expected": {
+        "subject_vehicle": 1,
+        "opponent_vehicle": 2,
+        "status": "initial_AB_contact",
+        "CEDI": null,
+        "ax_mps2": null,
+        "ay_mps2": null,
+        "original_ET_s": 0.0,
+        "planning_duration_s": null,
+        "expansion_factor": 1.0,
+        "expansion_level": 0,
+        "responses": [],
+        "attempts": [],
+        "tail_included": true,
+        "normalization_changed": false,
+        "terminal_AB_RCD_conflicts": null,
+        "candidates_visited": 0
+      }
+    }
+  ],
+  "mlc_cases": [
+    {
+      "name": "empty_neighbors",
+      "ego": {
+        "vid": 10,
+        "x": 280,
+        "y": 1.875,
+        "vx": 20,
+        "vy": 0,
+        "heading": 0,
+        "length": 4.8,
+        "width": 2.2
+      },
+      "surrounding": [],
+      "config": {
+        "tau_steps": 7,
+        "ax_steps": 9,
+        "zone_start": [
+          281.0,
+          0.0
+        ],
+        "zone_end": [
+          408.0,
+          3.75
+        ],
+        "lane_width": 3.75,
+        "lane_origin": 1.875,
+        "road_min_d": 0.0,
+        "road_max_d": 11.25
+      },
+      "expected": {
+        "status": "feasible",
+        "search_stage": "initial",
+        "CEDI": 1.3099370552722809,
+        "ax_mps2": 0.0,
+        "ay_mps2": 3.855144753666323,
+        "a_s_mps2": 0.0,
+        "a_s_max_mps2": 0.0,
+        "a_rear_mps2": 0.0,
+        "a_front_mps2": 0.0,
+        "a_front_max_mps2": 0.0,
+        "a_target_mps2": 0.0,
+        "interaction_cost_norm": 0.0,
+        "follower_demands_mps2": {},
+        "front_demands_mps2": {},
+        "tau_s": 0.0,
+        "ET_s": 1.2423333333333344,
+        "InDepth_m": 2.975,
+        "target_lane_id": 1,
+        "target_vehicle_ids": [],
+        "rear_vehicle_ids": [],
+        "front_same_vehicle_ids": [],
+        "ahead_of_target_ids": [],
+        "behind_target_ids": [],
+        "critical_surrounding_id": 0,
+        "critical_front_id": 0
+      }
+    },
+    {
+      "name": "original_front",
+      "ego": {
+        "vid": 10,
+        "x": 280,
+        "y": 1.875,
+        "vx": 20,
+        "vy": 0,
+        "heading": 0,
+        "length": 4.8,
+        "width": 2.2
+      },
+      "surrounding": [
+        {
+          "vid": 11,
+          "x": 310,
+          "y": 1.875,
+          "vx": 15,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        }
+      ],
+      "config": {
+        "tau_steps": 7,
+        "ax_steps": 9,
+        "zone_start": [
+          281.0,
+          0.0
+        ],
+        "zone_end": [
+          408.0,
+          3.75
+        ],
+        "lane_width": 3.75,
+        "lane_origin": 1.875,
+        "road_min_d": 0.0,
+        "road_max_d": 11.25
+      },
+      "expected": {
+        "status": "feasible",
+        "search_stage": "initial",
+        "CEDI": 1.3116170995210445,
+        "ax_mps2": 0.0,
+        "ay_mps2": 3.855144753666323,
+        "a_s_mps2": 0.0,
+        "a_s_max_mps2": 0.0,
+        "a_rear_mps2": 0.0,
+        "a_front_mps2": 0.48828125,
+        "a_front_max_mps2": 0.48828125,
+        "a_target_mps2": 0.0,
+        "interaction_cost_norm": 0.06636510363574584,
+        "follower_demands_mps2": {},
+        "front_demands_mps2": {
+          "11": 0.48828125
+        },
+        "tau_s": 0.0,
+        "ET_s": 1.2423333333333344,
+        "InDepth_m": 2.975,
+        "target_lane_id": 1,
+        "target_vehicle_ids": [],
+        "rear_vehicle_ids": [],
+        "front_same_vehicle_ids": [
+          11
+        ],
+        "ahead_of_target_ids": [],
+        "behind_target_ids": [],
+        "critical_surrounding_id": 0,
+        "critical_front_id": 11
+      }
+    },
+    {
+      "name": "original_rear",
+      "ego": {
+        "vid": 10,
+        "x": 280,
+        "y": 1.875,
+        "vx": 20,
+        "vy": 0,
+        "heading": 0,
+        "length": 4.8,
+        "width": 2.2
+      },
+      "surrounding": [
+        {
+          "vid": 11,
+          "x": 265,
+          "y": 1.875,
+          "vx": 25,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        }
+      ],
+      "config": {
+        "tau_steps": 7,
+        "ax_steps": 9,
+        "zone_start": [
+          281.0,
+          0.0
+        ],
+        "zone_end": [
+          408.0,
+          3.75
+        ],
+        "lane_width": 3.75,
+        "lane_origin": 1.875,
+        "road_min_d": 0.0,
+        "road_max_d": 11.25
+      },
+      "expected": {
+        "status": "feasible",
+        "search_stage": "initial",
+        "CEDI": 1.3099370552722809,
+        "ax_mps2": 0.0,
+        "ay_mps2": 3.855144753666323,
+        "a_s_mps2": 0.0,
+        "a_s_max_mps2": 0.0,
+        "a_rear_mps2": 0.0,
+        "a_front_mps2": 0.0,
+        "a_front_max_mps2": 0.0,
+        "a_target_mps2": 0.0,
+        "interaction_cost_norm": 0.0,
+        "follower_demands_mps2": {
+          "11": 0.0
+        },
+        "front_demands_mps2": {},
+        "tau_s": 0.0,
+        "ET_s": 1.2423333333333344,
+        "InDepth_m": 2.975,
+        "target_lane_id": 1,
+        "target_vehicle_ids": [],
+        "rear_vehicle_ids": [
+          11
+        ],
+        "front_same_vehicle_ids": [],
+        "ahead_of_target_ids": [],
+        "behind_target_ids": [],
+        "critical_surrounding_id": 0,
+        "critical_front_id": 0
+      }
+    },
+    {
+      "name": "target_neighbors",
+      "ego": {
+        "vid": 10,
+        "x": 280,
+        "y": 1.875,
+        "vx": 20,
+        "vy": 0,
+        "heading": 0,
+        "length": 4.8,
+        "width": 2.2
+      },
+      "surrounding": [
+        {
+          "vid": 11,
+          "x": 310,
+          "y": 5.625,
+          "vx": 15,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        },
+        {
+          "vid": 12,
+          "x": 260,
+          "y": 5.625,
+          "vx": 24,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        }
+      ],
+      "config": {
+        "tau_steps": 7,
+        "ax_steps": 9,
+        "zone_start": [
+          281.0,
+          0.0
+        ],
+        "zone_end": [
+          408.0,
+          3.75
+        ],
+        "lane_width": 3.75,
+        "lane_origin": 1.875,
+        "road_min_d": 0.0,
+        "road_max_d": 11.25
+      },
+      "expected": {
+        "status": "feasible",
+        "search_stage": "initial",
+        "CEDI": 1.3231412643480818,
+        "ax_mps2": 0.0,
+        "ay_mps2": 3.855144753666323,
+        "a_s_mps2": 0.5128205128205128,
+        "a_s_max_mps2": 0.5128205128205128,
+        "a_rear_mps2": 0.0,
+        "a_front_mps2": 0.48828125,
+        "a_front_max_mps2": 0.48828125,
+        "a_target_mps2": 0.5128205128205128,
+        "interaction_cost_norm": 0.18646103251142213,
+        "follower_demands_mps2": {
+          "12": 0.5128205128205128
+        },
+        "front_demands_mps2": {
+          "11": 0.48828125
+        },
+        "tau_s": 0.0,
+        "ET_s": 1.2423333333333344,
+        "InDepth_m": 2.975,
+        "target_lane_id": 1,
+        "target_vehicle_ids": [
+          11,
+          12
+        ],
+        "rear_vehicle_ids": [],
+        "front_same_vehicle_ids": [],
+        "ahead_of_target_ids": [
+          11
+        ],
+        "behind_target_ids": [
+          12
+        ],
+        "critical_surrounding_id": 12,
+        "critical_front_id": 11
+      }
+    },
+    {
+      "name": "slot_overlap",
+      "ego": {
+        "vid": 10,
+        "x": 280,
+        "y": 1.875,
+        "vx": 20,
+        "vy": 0,
+        "heading": 0,
+        "length": 4.8,
+        "width": 2.2
+      },
+      "surrounding": [
+        {
+          "vid": 11,
+          "x": 280,
+          "y": 5.625,
+          "vx": 20,
+          "vy": 0,
+          "heading": 0,
+          "length": 4,
+          "width": 2
+        }
+      ],
+      "config": {
+        "tau_steps": 7,
+        "ax_steps": 9,
+        "zone_start": [
+          281.0,
+          0.0
+        ],
+        "zone_end": [
+          408.0,
+          3.75
+        ],
+        "lane_width": 3.75,
+        "lane_origin": 1.875,
+        "road_min_d": 0.0,
+        "road_max_d": 11.25
+      },
+      "expected": {
+        "status": "feasible",
+        "search_stage": "initial",
+        "CEDI": 7.463280338228663,
+        "ax_mps2": -7.3575,
+        "ay_mps2": 21.766375754721857,
+        "a_s_mps2": 0.0,
+        "a_s_max_mps2": 0.0,
+        "a_rear_mps2": 0.0,
+        "a_front_mps2": 0.0,
+        "a_front_max_mps2": 0.0,
+        "a_target_mps2": 0.0,
+        "interaction_cost_norm": 0.0,
+        "follower_demands_mps2": {},
+        "front_demands_mps2": {
+          "11": 0.0
+        },
+        "tau_s": 1.2423333333333344,
+        "ET_s": 0.5228359258329046,
+        "InDepth_m": 2.975,
+        "target_lane_id": 1,
+        "target_vehicle_ids": [
+          11
+        ],
+        "rear_vehicle_ids": [],
+        "front_same_vehicle_ids": [],
+        "ahead_of_target_ids": [
+          11
+        ],
+        "behind_target_ids": [],
+        "critical_surrounding_id": 0,
+        "critical_front_id": 0
+      }
+    },
+    {
+      "name": "no_boundary_contact",
+      "ego": {
+        "vid": 10,
+        "x": 200,
+        "y": 5.625,
+        "vx": 20,
+        "vy": 0,
+        "heading": 0,
+        "length": 4.8,
+        "width": 2.2
+      },
+      "surrounding": [],
+      "config": {
+        "tau_steps": 7,
+        "ax_steps": 9,
+        "zone_start": [
+          281.0,
+          0.0
+        ],
+        "zone_end": [
+          408.0,
+          3.75
+        ],
+        "lane_width": 3.75,
+        "lane_origin": 1.875,
+        "road_min_d": 0.0,
+        "road_max_d": 11.25
+      },
+      "expected": {
+        "status": "no_predicted_work_zone_contact"
+      }
+    },
+    {
+      "name": "initial_boundary_contact",
+      "ego": {
+        "vid": 10,
+        "x": 350,
+        "y": 1.875,
+        "vx": 20,
+        "vy": 0,
+        "heading": 0,
+        "length": 4.8,
+        "width": 2.2
+      },
+      "surrounding": [],
+      "config": {
+        "tau_steps": 7,
+        "ax_steps": 9,
+        "zone_start": [
+          281.0,
+          0.0
+        ],
+        "zone_end": [
+          408.0,
+          3.75
+        ],
+        "lane_width": 3.75,
+        "lane_origin": 1.875,
+        "road_min_d": 0.0,
+        "road_max_d": 11.25
+      },
+      "expected": {
+        "status": "already_at_work_zone"
+      }
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "rcd-cedi"
+version = "0.1.1"
+description = "Rectangle reachable conflict detection and vehicle-specific evasion difficulty"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = ["numpy>=1.24", "numba>=0.59"]
+
+[project.optional-dependencies]
+test = ["pytest>=7"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+rcd_cedi = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
