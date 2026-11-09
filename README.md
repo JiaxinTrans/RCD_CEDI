@@ -47,16 +47,19 @@ Three cases from the main article illustrate conflict detection and risk evoluti
 
 ### Case 1: Conflict detection during a LC maneuver in a multi-vehicle work zone environment
 This case compares RCD with other conflict detection methods during an observed lane change by the subject vehicle in multi-vehicles.
-[![Case 1](asset/gifs/rcd_case1.gif)](asset/gifs/rcd_case1.gif?raw=true)
+
+[![Case 1](asset/gifs/rcd_case1.gif)](asset/gifs/rcd_case1.gif)
 
 
 ### Case 2: Aggressive overtaking and MLC
 This case shows how CEDI captures emerging risk and reaches the top 20% threshold earlier, providing advance warning.
-[![Case 2](asset/gifs/cedi_case1.gif)](asset/gifs/cedi_case1.gif?raw=true)
+
+[![Case 2](asset/gifs/cedi_case1.gif)](asset/gifs/cedi_case1.gif)
 
 ### Case 3: Conflicts with another vehicle and the work zone during a MLC
 This case shows how CEDI evaluates the subject and interacting vehicles separately, accounting for their respective driving environments and capturing risk asymmetry.
-[![Case_3](asset/gifs/cedi_case2.gif)](asset/gifs/cedi_case2.gif?raw=true)
+
+[![Case 3](asset/gifs/cedi_case2.gif)](asset/gifs/cedi_case2.gif)
 
 
 ## Installation
