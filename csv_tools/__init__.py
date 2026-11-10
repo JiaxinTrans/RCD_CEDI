@@ -1,1 +1,1 @@
-"""CSV workflows for MLC and vehicle conflicts. Run from the repository root."""
+"""CSV workflows using scalar speed and heading; run from the repository root."""

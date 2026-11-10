@@ -11,21 +11,21 @@ from rcd_cedi.responses import sample_times
 from rcd_cedi.search import candidate_grids
 
 
-def state(vid=1,x=0.,y=1.875,vx=10.):
-    return VehicleState(vid,x,y,vx,0.,0.,4.,2.)
+def state(vid=1,x=0.,y=1.875,speed=10.):
+    return VehicleState(vid,x,y,speed,0.,4.,2.)
 
 
 @pytest.mark.parametrize('kwargs', [{'length':0},{'width':-1},{'x':math.nan},
                                      {'heading':math.inf},{'vid':True},{'vid':1.2}])
 def test_invalid_state_rejected(kwargs):
-    args=dict(vid=1,x=0,y=1,vx=10,vy=0,heading=0,length=4,width=2)
+    args=dict(vid=1,x=0,y=1,speed=10,heading=0,length=4,width=2)
     args.update(kwargs)
     with pytest.raises(ValueError):
         VehicleState(**args)
 
 
 def test_unique_ids_required_in_public_apis():
-    a,b = state(),state(2,20,vx=0)
+    a,b = state(),state(2,20,speed=0)
     with pytest.raises(ValueError):
         detect_vehicle_conflict(a,b,[a])
     with pytest.raises(ValueError):
@@ -57,7 +57,7 @@ def test_samples_include_exact_ET():
 
 def test_pair_perspectives_and_generator_input():
     cfg=VehicleConfig(ax_steps=9,ay_steps=9,sector_steps=3,expansion_factors=(1.,2.))
-    result=evaluate_vehicle_pair(state(),state(2,20,vx=0),(s for s in []),cfg)
+    result=evaluate_vehicle_pair(state(),state(2,20,speed=0),(s for s in []),cfg)
     assert set(result)=={1,2}
     assert result[1].subject_vehicle==1 and result[2].subject_vehicle==2
     assert result[1].opponent_vehicle==2 and result[2].opponent_vehicle==1
@@ -78,6 +78,6 @@ def test_shifted_mlc_boundary_explicitly_rejected():
 
 def test_initial_static_overlap_unscored():
     cfg=VehicleConfig(ax_steps=9,ay_steps=9,sector_steps=3,expansion_factors=(1.,))
-    result=evaluate_vehicle_conflict(state(),state(2,20,vx=0),config=cfg,
+    result=evaluate_vehicle_conflict(state(),state(2,20,speed=0),config=cfg,
                                      context=Environment.rectangle(-3,3,0,4))
     assert result.status=='initial_SV_work_zone_overlap' and result.cedi is None

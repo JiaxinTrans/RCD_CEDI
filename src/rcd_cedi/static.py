@@ -68,7 +68,7 @@ def pack_scene(ego,counter,scene,polygon,settings):
     k=0 if polygon is None else 2+len(normals)
     zaxes=np.empty((n,k,2));zlower=np.empty((n,k));zupper=np.empty((n,k))
     for i,s in enumerate(actors):
-        states[i]=(s.vid,s.x,s.y,s.vx,s.vy,math.cos(s.heading),math.sin(s.heading),s.length/2,s.width/2,*s.direction,math.hypot(s.vx,s.vy),s.radius((0,1)))
+        states[i]=(s.vid,s.x,s.y,s.vx,s.vy,math.cos(s.body_angle),math.sin(s.body_angle),s.length/2,s.width/2,*s.direction,s.speed,s.radius((0,1)))
         for j,o in enumerate(actors):
             axes[i,j]=list(s.basis)+list(o.basis)
             radii[i,j]=[s.radius(axis)+o.radius(axis)+settings.gap for axis in axes[i,j]]

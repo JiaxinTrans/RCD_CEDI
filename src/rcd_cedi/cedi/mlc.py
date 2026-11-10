@@ -9,7 +9,7 @@ import math
 from functools import lru_cache
 import numpy as np
 from ..constants import G
-from ..models import VehicleState as State
+from ..models import VehicleState as State, _at_motion
 from ..config import MLCConfig as Config
 
 def lane_id(d: float, cfg: Config) -> int:
@@ -224,7 +224,7 @@ def evaluate_mlc_candidate(ego: State, others: list[State], ax: float,
     b_of, d_of = _instant_demand(s, vs, ego, original_front, tau, False)
     if not all(math.isfinite(b) for b in (b_of, b_tf, b_tr)):
         return None
-    start = State(ego.vid, s, d, vs, ego.vd, ego.theta, ego.length, ego.width)
+    start = _at_motion(ego, (s, d, vs, ego.vd))
     et = first_zone_contact(start, 0.0, 0.0, cfg)
     if not math.isfinite(et) or et <= 1e-9:
         return None

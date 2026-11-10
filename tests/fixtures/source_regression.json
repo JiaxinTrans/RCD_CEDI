@@ -1,5 +1,5 @@
 {
-  "description": "Expected outputs generated from unmodified supplied sources; timings removed.",
+  "description": "Expected outputs generated from unmodified supplied sources; timings removed. Input states migrated to speed/heading; expected outputs untouched.",
   "sha256": {
     "rcd_latest_csv(3).py": "af2a31bbea40a683f8bf2264707c9a161387d4f099bc2f6310fe0e990cd06c35",
     "cedi_core(1).py": "a7834cf6296e0701d3a90a391ac22ab5e619e957abdac07c8d37e52a6bcf7b90",
@@ -15,21 +15,19 @@
         "vid": 1,
         "x": 0,
         "y": 1.875,
-        "vx": 10,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 10.0
       },
       "b": {
         "vid": 2,
         "x": 20,
         "y": 1.875,
-        "vx": 0,
-        "vy": 0,
         "heading": 0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 0.0
       },
       "surrounding": [],
       "config": {
@@ -115,32 +113,29 @@
         "vid": 1,
         "x": 0,
         "y": 1.875,
-        "vx": 10,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 10.0
       },
       "b": {
         "vid": 2,
         "x": 20,
         "y": 1.875,
-        "vx": 0,
-        "vy": 0,
         "heading": 0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 0.0
       },
       "surrounding": [
         {
           "vid": 3,
           "x": -15,
           "y": 1.875,
-          "vx": 15,
-          "vy": 0,
-          "heading": 0,
+          "heading": 0.0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 15.0
         }
       ],
       "config": {
@@ -247,32 +242,29 @@
         "vid": 1,
         "x": 0,
         "y": 1.875,
-        "vx": 10,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 10.0
       },
       "b": {
         "vid": 2,
         "x": 20,
         "y": 1.875,
-        "vx": 0,
-        "vy": 0,
         "heading": 0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 0.0
       },
       "surrounding": [
         {
           "vid": 3,
           "x": 22,
           "y": 5.625,
-          "vx": 0,
-          "vy": 0,
           "heading": 0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 0.0
         }
       ],
       "config": {
@@ -379,42 +371,38 @@
         "vid": 1,
         "x": 0,
         "y": 1.875,
-        "vx": 10,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 10.0
       },
       "b": {
         "vid": 2,
         "x": 20,
         "y": 1.875,
-        "vx": 0,
-        "vy": 0,
         "heading": 0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 0.0
       },
       "surrounding": [
         {
           "vid": 3,
           "x": -15,
           "y": 1.875,
-          "vx": 15,
-          "vy": 0,
-          "heading": 0,
+          "heading": 0.0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 15.0
         },
         {
           "vid": 4,
           "x": 22,
           "y": 5.625,
-          "vx": 0,
-          "vy": 0,
           "heading": 0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 0.0
         }
       ],
       "config": {
@@ -541,32 +529,30 @@
         "vid": 1,
         "x": 0,
         "y": 1.875,
-        "vx": 10,
-        "vy": 0,
-        "heading": 0.03,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 10.0,
+        "body_heading": 0.03
       },
       "b": {
         "vid": 2,
         "x": 20,
         "y": 1.875,
-        "vx": 0,
-        "vy": 0,
         "heading": -0.02,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 0.0
       },
       "surrounding": [
         {
           "vid": 3,
           "x": -18,
           "y": 1.875,
-          "vx": 12,
-          "vy": 0,
-          "heading": 0,
+          "heading": 0.0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 12.0
         }
       ],
       "config": {
@@ -673,21 +659,19 @@
         "vid": 1,
         "x": 0,
         "y": 1.875,
-        "vx": 10,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 10.0
       },
       "b": {
         "vid": 2,
         "x": 50,
         "y": 1.875,
-        "vx": 5,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 5.0
       },
       "surrounding": [],
       "config": {
@@ -773,21 +757,19 @@
         "vid": 1,
         "x": 0,
         "y": 1.875,
-        "vx": 10,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 10.0
       },
       "b": {
         "vid": 2,
         "x": 20,
         "y": 5.625,
-        "vx": 0,
-        "vy": 0,
         "heading": 0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 0.0
       },
       "surrounding": [],
       "config": {
@@ -846,21 +828,19 @@
         "vid": 1,
         "x": 0,
         "y": 1.875,
-        "vx": 10,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 10.0
       },
       "b": {
         "vid": 2,
         "x": 3,
         "y": 1.875,
-        "vx": 0,
-        "vy": 0,
         "heading": 0,
         "length": 4,
-        "width": 2
+        "width": 2,
+        "speed": 0.0
       },
       "surrounding": [],
       "config": {
@@ -921,11 +901,10 @@
         "vid": 10,
         "x": 280,
         "y": 1.875,
-        "vx": 20,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4.8,
-        "width": 2.2
+        "width": 2.2,
+        "speed": 20.0
       },
       "surrounding": [],
       "config": {
@@ -978,22 +957,20 @@
         "vid": 10,
         "x": 280,
         "y": 1.875,
-        "vx": 20,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4.8,
-        "width": 2.2
+        "width": 2.2,
+        "speed": 20.0
       },
       "surrounding": [
         {
           "vid": 11,
           "x": 310,
           "y": 1.875,
-          "vx": 15,
-          "vy": 0,
-          "heading": 0,
+          "heading": 0.0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 15.0
         }
       ],
       "config": {
@@ -1050,22 +1027,20 @@
         "vid": 10,
         "x": 280,
         "y": 1.875,
-        "vx": 20,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4.8,
-        "width": 2.2
+        "width": 2.2,
+        "speed": 20.0
       },
       "surrounding": [
         {
           "vid": 11,
           "x": 265,
           "y": 1.875,
-          "vx": 25,
-          "vy": 0,
-          "heading": 0,
+          "heading": 0.0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 25.0
         }
       ],
       "config": {
@@ -1122,32 +1097,29 @@
         "vid": 10,
         "x": 280,
         "y": 1.875,
-        "vx": 20,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4.8,
-        "width": 2.2
+        "width": 2.2,
+        "speed": 20.0
       },
       "surrounding": [
         {
           "vid": 11,
           "x": 310,
           "y": 5.625,
-          "vx": 15,
-          "vy": 0,
-          "heading": 0,
+          "heading": 0.0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 15.0
         },
         {
           "vid": 12,
           "x": 260,
           "y": 5.625,
-          "vx": 24,
-          "vy": 0,
-          "heading": 0,
+          "heading": 0.0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 24.0
         }
       ],
       "config": {
@@ -1211,22 +1183,20 @@
         "vid": 10,
         "x": 280,
         "y": 1.875,
-        "vx": 20,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4.8,
-        "width": 2.2
+        "width": 2.2,
+        "speed": 20.0
       },
       "surrounding": [
         {
           "vid": 11,
           "x": 280,
           "y": 5.625,
-          "vx": 20,
-          "vy": 0,
-          "heading": 0,
+          "heading": 0.0,
           "length": 4,
-          "width": 2
+          "width": 2,
+          "speed": 20.0
         }
       ],
       "config": {
@@ -1285,11 +1255,10 @@
         "vid": 10,
         "x": 200,
         "y": 5.625,
-        "vx": 20,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4.8,
-        "width": 2.2
+        "width": 2.2,
+        "speed": 20.0
       },
       "surrounding": [],
       "config": {
@@ -1318,11 +1287,10 @@
         "vid": 10,
         "x": 350,
         "y": 1.875,
-        "vx": 20,
-        "vy": 0,
-        "heading": 0,
+        "heading": 0.0,
         "length": 4.8,
-        "width": 2.2
+        "width": 2.2,
+        "speed": 20.0
       },
       "surrounding": [],
       "config": {

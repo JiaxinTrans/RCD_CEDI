@@ -44,18 +44,18 @@ prepared = prepare_ab(a, b)
 print(f"A-B contact time: {prepared.t_ab} s")
 
 # Test stationary C, clearance after ET, at ET, and before ET.
-for vy in (0.0, 0.5, 0.9375, 1.5):
+for speed in (0.0, 0.5, 0.9375, 1.5):
     c = Vehicle.from_paper_state(
         "C",
         10, 0,
-        vy,
+        speed,
         math.pi / 2,
         4, 2,
     )
 
     result = evaluate_prepared_c(prepared, c)
 
-    print(f"\nC speed: {vy} m/s")
+    print(f"\nC speed: {speed} m/s")
     print(f"I_C: {result['I_C']}")
     print(f"S_C: {result['S_C']}")
     print(f"D_C: {result['D_C']} m")

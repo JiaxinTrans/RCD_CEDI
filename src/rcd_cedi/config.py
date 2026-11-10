@@ -1,10 +1,7 @@
-"""User-configurable CEDI settings; distances in m, times in s,
+"""User-configurable CEDI settings; distances in m, times in s, g = 9.81.
+
 Road/work-zone defaults describe a generic example, not a study site.
 Pass keyword arguments to MLCConfig or VehicleConfig to use another scenario.
-The normalization scales for ax, ay, afs, ars (surround_brake_g), and other demand terms are user-configurable positive values.
-They can be selected according to the specific scenario and assessment objectives to balance CEDI's sensitivity to different demand components.
-For a given demand, a smaller scale increases its contribution to CEDI, whereas a larger  scale reduces its contribution.
-The default values are used in our paper and can be adjusted by the user.
 """
 from __future__ import annotations
 
@@ -27,7 +24,6 @@ def _steps(name, value):
         raise ValueError(f'{name} must be an integer >= 2')
 
 
-
 @dataclass(frozen=True)
 class VehicleConfig:
     """Vehicle CEDI settings with generic road and 30-step search defaults.
@@ -37,7 +33,7 @@ class VehicleConfig:
     ax/ay and surrounding g scales normalize costs at every expansion level.
     """
 
-    horizon: float = 10.0
+    horizon: float = 6.0
     road_min: float = 0.0
     road_max: float = 10.5  # Example: three 3.5-m lanes; independent of lane_width.
     lane_width: float = 3.5

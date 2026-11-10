@@ -53,7 +53,7 @@ def raw_rcd_audit(states,active,pair_only=False):
 
 
 def manual_sv_end(s, ax, ay, t, lane_width):
-    speed=math.hypot(s.vx,s.vy)
+    speed=s.speed
     ex,ey=s.direction
     u=min(t,speed/(-ax)) if ax<0 else t
     q=speed*u+.5*ax*u*u

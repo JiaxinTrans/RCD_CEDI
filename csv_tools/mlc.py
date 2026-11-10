@@ -5,6 +5,8 @@ Run from the repository root after installing rcd_cedi:
 
 P1 reuses the existing finite work-zone boundary contact model. No P2 is
 applied to MLC. Every same-frame surrounding vehicle remains in CEDI.
+CSV columns: time_s,vid,x,y,speed,heading,length,width. Angles are radians.
+Optional body_heading controls rectangle orientation only; velocity is derived.
 """
 import argparse
 import math

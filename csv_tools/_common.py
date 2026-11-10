@@ -7,7 +7,8 @@ from pathlib import Path
 
 from rcd_cedi import MLCConfig, StaticEnvironment, VehicleConfig, VehicleState, __version__
 
-INPUT_FIELDS = ("time_s", "vid", "x", "y", "vx", "vy", "heading", "length", "width")
+INPUT_FIELDS = ("time_s", "vid", "x", "y", "speed", "heading", "length", "width")
+OPTIONAL_INPUT_FIELDS = ("body_heading",)
 OUTPUT_FIELDS = (
     "time_s", "mode", "subject_vehicle", "opponent_vehicle", "status",
     "rcd_status", "p1", "p2_checked", "predicted_contact", "reachable",
@@ -26,9 +27,10 @@ def load_settings(path, mode):
     if unknown:
         raise ValueError(f"unknown configuration sections for {mode}: {sorted(unknown)}")
     mapping = settings.get("columns", {})
-    if not isinstance(mapping, dict) or set(mapping) - set(INPUT_FIELDS):
-        raise ValueError("columns must map canonical input fields to CSV headers")
-    columns = {key: mapping.get(key, key) for key in INPUT_FIELDS}
+    all_fields = INPUT_FIELDS + OPTIONAL_INPUT_FIELDS
+    if not isinstance(mapping, dict) or set(mapping) - set(all_fields):
+        raise ValueError("columns must map speed/heading input fields to CSV headers; vx/vy are derived")
+    columns = {key: mapping.get(key, key) for key in all_fields}
     if any(not isinstance(value, str) or not value for value in columns.values()):
         raise ValueError("CSV column names must be nonempty strings")
     if len(set(columns.values())) != len(columns):
@@ -47,7 +49,9 @@ def load_frames(path, columns):
         headers = reader.fieldnames or []
         if len(headers) != len(set(headers)):
             raise ValueError("CSV has duplicate column headers")
-        missing = set(columns.values()) - set(headers)
+        if {"vx", "vy"}.intersection(headers):
+            raise ValueError("vx/vy are derived, not CSV inputs; supply speed and heading instead")
+        missing = {columns[key] for key in INPUT_FIELDS} - set(headers)
         if missing:
             raise ValueError(f"missing CSV columns: {sorted(missing)}")
         for row in reader:
@@ -58,9 +62,14 @@ def load_frames(path, columns):
                     raise ValueError("time_s must be finite")
                 if not vid.is_finite() or vid != vid.to_integral_value():
                     raise ValueError("vid must be an integer")
+                fields = {key: float(row[columns[key]]) for key in INPUT_FIELDS[2:]}
+                for key in OPTIONAL_INPUT_FIELDS:
+                    value = row.get(columns[key])
+                    if value is not None and value.strip():
+                        fields[key] = float(value)
                 state = VehicleState(
                     vid=int(vid),
-                    **{key: float(row[columns[key]]) for key in INPUT_FIELDS[2:]},
+                    **fields,
                 )
                 frame = frames.setdefault(time, {})
                 if state.vid in frame:
@@ -110,6 +119,9 @@ def write_outputs(rows, output_path, mode, config, context, columns, skipped, **
         writer.writeheader()
         writer.writerows(rows)
     metadata = dict(mode=mode, code_version=__version__, columns=columns,
+                    state_input="speed_heading", angle_unit="radians",
+                    derived_velocity="vx = speed*cos(heading); vy = speed*sin(heading)",
+                    body_heading_default="heading; optional body_heading overrides rectangle orientation only",
                     configuration=asdict(config), static_polygon=context.polygon,
                     p2_enabled=mode == "vehicle", timestamp_grouping="exact decimal values",
                     frames_without_subject=skipped, output_rows=len(rows), **selection)

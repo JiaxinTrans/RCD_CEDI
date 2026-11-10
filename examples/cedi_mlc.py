@@ -15,9 +15,9 @@ config = MLCConfig(
 )
 original_center = config.lane_origin
 target_center = original_center + config.target_lane_offset*config.lane_width
-ego = VehicleState(10, -10, original_center, 20, 0, 0, 4.8, 2.2)
-front = VehicleState(11, 20, target_center, 15, 0, 0, 4, 2)
-rear = VehicleState(12, -30, target_center, 24, 0, 0, 4, 2)
+ego = VehicleState(10, -10, original_center, 20, 0, 4.8, 2.2)
+front = VehicleState(11, 20, target_center, 15, 0, 4, 2)
+rear = VehicleState(12, -30, target_center, 24, 0, 4, 2)
 result = evaluate_mlc(ego, [front, rear], config)
 print('status:', result.status)
 print('CEDI:', result.cedi)

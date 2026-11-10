@@ -2,6 +2,9 @@
 
 Run from the repository root after installing rcd_cedi:
     python -m csv_tools.vehicle --input csv_tools/data/trajectories_vehicle.csv --ego 1 --other 2 --both
+
+CSV columns: time_s,vid,x,y,speed,heading,length,width. Angles are radians.
+Optional body_heading controls rectangle orientation only; velocity is derived.
 """
 import argparse
 

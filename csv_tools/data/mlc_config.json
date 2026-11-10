@@ -4,11 +4,10 @@
     "vid": "vid",
     "x": "x",
     "y": "y",
-    "vx": "vx",
-    "vy": "vy",
     "heading": "heading",
     "length": "length",
-    "width": "width"
+    "width": "width",
+    "speed": "speed"
   },
   "mlc": {
     "zone_start": [

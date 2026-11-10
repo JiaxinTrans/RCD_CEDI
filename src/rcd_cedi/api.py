@@ -29,7 +29,7 @@ def _scene(ego, opponent, surrounding):
 
 def _rectangle(state):
     return Vehicle(str(state.vid), (state.x, state.y), (state.vx, state.vy),
-                   state.length, state.width, math.degrees(state.heading))
+                   state.length, state.width, math.degrees(state.body_angle))
 
 
 def detect_vehicle_conflict(a: VehicleState, b: VehicleState,

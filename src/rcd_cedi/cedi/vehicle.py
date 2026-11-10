@@ -9,7 +9,7 @@ from time import perf_counter
 import numpy as np
 from numba import njit
 from ..constants import EPS, G
-from ..models import VehicleState as State
+from ..models import _at_motion
 from ..geometry import predicted_ttc
 from ..static import pack_scene, initial_zone_overlap
 from ..motion import (_native_motion, _native_contact, _native_road, _native_zone)
@@ -384,8 +384,8 @@ def solve(ego, opponent, scene, polygon, settings, grids, factors,
             if not np.allclose(checked, details, equal_nan=True, atol=1e-11, rtol=0.):
                 raise AssertionError('retained diagnostic mismatch')
             end_other = _native_motion(states[1], 0., 0., False, duration, cfg)
-            a = State(ego.vid, *end_sv[:4], ego.heading, ego.length, ego.width)
-            b = State(opponent.vid, *end_other[:4], opponent.heading, opponent.length, opponent.width)
+            a = _at_motion(ego, end_sv)
+            b = _at_motion(opponent, end_other)
             if predicted_ttc(a, b) is not None:
                 raise AssertionError('terminal original pair contact')
             end_states = states.copy()
@@ -402,10 +402,10 @@ def solve(ego, opponent, scene, polygon, settings, grids, factors,
                 at = _native_motion(states[0], ax, ay, True, trigger, cfg)
                 c = states[j]
                 first = raw_rcd.Vehicle('SV', (at[0],at[1]), (at[2],at[3]),
-                    2*states[0,7], 2*states[0,8], math.degrees(ego.heading))
+                    2*states[0,7], 2*states[0,8], math.degrees(ego.body_angle))
                 second = raw_rcd.Vehicle(str(actors[j].vid),
                     (c[1]+c[3]*trigger, c[2]+c[4]*trigger), (c[3],c[4]),
-                    2*c[7], 2*c[8], math.degrees(actors[j].heading))
+                    2*c[7], 2*c[8], math.degrees(actors[j].body_angle))
                 raw_time = raw_rcd.swept_contact(first, second)
                 if raw_time is None or not math.isclose(raw_time, details[j,1], abs_tol=1e-7, rel_tol=1e-7):
                     raise AssertionError(('first RCD trigger audit', raw_time, details[j,1]))
