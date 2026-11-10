@@ -96,11 +96,14 @@ See [Configuration](#configuration) for adjustable settings and [Inputs and outp
 Vehicle C lies between A and B. RCD checks whether C blocks their predicted conflict.
 
 ```python
+import math
 from rcd_cedi import VehicleState, detect_vehicle_conflict
 
-a = VehicleState(1, 0, 0, 10, 0, 0, 4, 2)
-b = VehicleState(2, 20, 0, 0, 0, 0, 4, 2)
-c = VehicleState(3, 10, 0, 0, 1, 0, 4, 2)
+# Arguments: ID, x, y, speed, heading (rad), length, width.
+a = VehicleState(1, 0, 0, 10, 0, 4, 2)
+b = VehicleState(2, 20, 0, 0, 0, 4, 2)
+# C moves along +y while its body remains aligned with +x.
+c = VehicleState(3, 10, 0, 1, math.pi / 2, 4, 2, body_heading=0)
 
 result = detect_vehicle_conflict(a, b, surrounding=[c])
 print(result.status)       # blocked
@@ -114,7 +117,7 @@ Define the work zone and evaluate the subject vehicle. Add other vehicles throug
 ```python
 from rcd_cedi import VehicleState, MLCConfig, evaluate_mlc
 
-ego = VehicleState(10, -10, 1.75, 20, 0, 0, 4.8, 2.2)
+ego = VehicleState(10, -10, 1.75, 20, 0, 4.8, 2.2)
 config = MLCConfig(
     zone_start=(0.0, 0.0),
     zone_end=(100.0, 3.5),
@@ -138,9 +141,9 @@ Evaluate the same conflict from each vehicle's perspective, including the suppli
 ```python
 from rcd_cedi import VehicleState, VehicleConfig, evaluate_vehicle_pair
 
-a = VehicleState(1, 0, 1.75, 10, 0, 0, 4, 2)
-b = VehicleState(2, 20, 1.75, 0, 0, 0, 4, 2)
-others = [VehicleState(3, -15, 1.75, 15, 0, 0, 4, 2)]
+a = VehicleState(1, 0, 1.75, 10, 0, 4, 2)
+b = VehicleState(2, 20, 1.75, 0, 0, 4, 2)
+others = [VehicleState(3, -15, 1.75, 15, 0, 4, 2)]
 config = VehicleConfig(
     road_min=0.0, road_max=10.5, lane_width=3.5,
     ax_steps=30, ay_steps=30, sector_steps=30,
@@ -155,8 +158,6 @@ for vid, result in results.items():
 ### Normalization scales and sensitivity
 
 The denominators in the CEDI cost are **normalization scales**. They can be set to finite positive values according to the scenario and assessment objective to balance sensitivity to the different maneuvering demands. They do not have to match the paper's experimental settings.
-
-For the same action and demand, a larger normalization scale reduces that term’s cost contribution, while a smaller scale increases it. In highway and work-zone scenarios where braking is preferred to lateral evasion, the scales can be set to assign a lower relative cost to braking.
 
 | Model | Relevant configuration fields |
 |---|---|
@@ -182,26 +183,6 @@ vehicle_config = VehicleConfig(
 )
 ```
 
-### Default settings
-
-The defaults describe a generic example rather than a study site: three 3.5 m lanes with lateral bounds `[0, 10.5]` m and an MLC boundary from `(0, 0)` to `(100, 3.5)` m.
-
-| Parameter | Default | Meaning |
-|---|---|---|
-| MLC `zone_start / zone_end` | `(0, 0) / (100, 3.5)` | Work-zone boundary endpoints, m; `zone_start[1]` must be zero |
-| `lane_width` | 3.5 | Lane width, m |
-| MLC `lane_origin` | 1.75 | Lateral coordinate of the lane 0 center, m |
-| MLC `target_lane_offset` | 1 | Target lane ID minus original lane ID |
-| MLC `road_min_d / road_max_d`; vehicle conflict `road_min / road_max` | 0 / 10.5 | Lateral road bounds, m |
-| MLC `tau_steps / ax_steps` | 30 / 30 | Waiting-time and longitudinal search resolution |
-| Vehicle conflict `ax_steps / ay_steps / sector_steps` | 30 / 30 / 30 | Longitudinal, lateral, and sector search resolution |
-| MLC `ax_brake_limits_g`; vehicle conflict `ax_brake_g` | `(0.75, 1.50)`; 0.75 | Original braking settings; user-adjustable |
-| Other acceleration scales, `gap`, timing, and expansion settings | See `config.py` | User-adjustable solver settings |
-
-Lane centers, road bounds, work-zone endpoints, and vehicle positions are independent inputs. Check them together when changing the layout. All positions must use the same coordinate system.
-
-Search resolution can affect the discrete optimum. MLC `ax_steps` also sets the finite expansion-stage budget; it is not a maximum physical acceleration. Vehicle conflict candidate counts also depend on additional grid points and sector sampling, so they are not simply `ax_steps × ay_steps`. Historical regression fixtures retain their explicit original settings and do not define the public defaults.
-
 ## Inputs and outputs
 
 ### Vehicle states and coordinates
@@ -212,15 +193,17 @@ from rcd_cedi import VehicleState
 ego = VehicleState(
     vid=1,
     x=0.0, y=1.75,        # m
-    vx=10.0, vy=0.0,      # m/s
-    heading=0.0,          # Body heading, rad
+    speed=10.0,           # m/s
+    heading=0.0,          # Velocity direction, rad
     length=4.0, width=2.0, # m
 )
 ```
 
-All moving actors are rectangles with fixed body headings during prediction. Body heading and velocity direction are stored separately and need not coincide. For MLC, `x/y/vx/vy` represent longitudinal/lateral position and velocity, with lanes aligned along the x-axis.
+Provide nonnegative `speed` (m/s) and `heading` (rad); velocity components are calculated internally. Heading is measured counterclockwise from the positive x-axis in the same coordinate frame as `x` and `y`.
 
-Vehicle IDs must be unique integers with absolute values no greater than `2**53`. Supply only the other vehicles in `surrounding`, excluding the subject and opponent. Synchronize trajectories and convert coordinates before calling the API.
+Body orientation follows `heading` by default. Use optional `body_heading` when it differs from the motion direction. The body orientation remains fixed during prediction. For MLC, `x` is longitudinal and `y` is lateral, with lanes aligned along the x-axis.
+
+Vehicle IDs must be unique integers. Supply only the other vehicles in `surrounding`, excluding the subject and opponent. Synchronize trajectories and convert coordinates before calling the API.
 
 ### CSV workflows
 
@@ -241,11 +224,11 @@ python -m csv_tools.mlc --input csv_tools/data/trajectories_mlc.csv --ego 1 --ou
 python -m csv_tools.vehicle --input csv_tools/data/trajectories_vehicle.csv --ego 1 --other 2 --both --output vehicle_results.csv
 ```
 
-Replace the input path and vehicle IDs for your own data. Add `--config csv_tools/data/mlc_config.json` or `--config csv_tools/data/vehicle_config.json` to override the corresponding settings. Unspecified parameters retain the package defaults, including the 30-step search settings. The `columns` mapping supports other CSV header names. MLC uses `zone_start` and `zone_end`; the vehicle configuration can include a convex `static_polygon`.
+Replace the input path and vehicle IDs for your own data. Add `--config csv_tools/data/mlc_config.json` or `--config csv_tools/data/vehicle_config.json` to override the corresponding settings. The `columns` mapping supports other CSV header names. MLC uses `zone_start` and `zone_end`; the vehicle configuration can include a convex `static_polygon`.
 
-**MLC detection:** only P1 is checked, using the existing constant-velocity contact model for the finite work-zone boundary. A positive finite contact time triggers CEDI. No predicted contact gives CEDI 0; initial contact remains unscored. No P2 or new ET/horizon acceptance threshold is applied. All same-frame surrounding vehicles are retained in the MLC solver.
+**MLC detection:** P1 checks predicted contact with the finite work-zone boundary under constant velocity. Positive finite contact times trigger CEDI; no contact gives 0, and initial contact remains unscored. P2 is not applied. All same-frame surrounding vehicles enter the solver.
 
-**Vehicle conflict detection:** RCD checks P1 and, where applicable, P2 before CEDI. Only a `reachable` pair is scored. Other detection statuses remain visible as `skipped_rcd_...`, with blank CEDI. Omit `--both` to score only the subject vehicle. A missing opponent is recorded explicitly.
+**Vehicle conflict detection:** RCD screens pairs using P1 and P2. Only `reachable` pairs receive CEDI scores; other statuses are retained with blank scores. Omit `--both` to evaluate only the subject vehicle. 
 
 ### CSV input fields
 
@@ -254,15 +237,16 @@ Replace the input path and vehicle IDs for your own data. Add `--config csv_tool
 | `time_s` | Time in seconds |
 | `vid` | Unique integer vehicle ID within a frame |
 | `x`, `y` | Rectangle center coordinates, m |
-| `vx`, `vy` | Velocity components, m/s |
-| `heading` | Body heading, rad |
+| `speed` | Nonnegative scalar speed, m/s |
+| `heading` | Velocity direction, rad |
 | `length`, `width` | Positive vehicle dimensions, m |
+| `body_heading` | Optional body orientation, rad; defaults to `heading` when omitted or blank |
 
-Coordinates and vehicle states are used as supplied: no shifting, rotation, interpolation, or rounding is performed. Provide synchronized timestamps. Equal numeric timestamps such as `0.1` and `0.10` are grouped together; nearby distinct times are not merged. Duplicate IDs within a frame are rejected. Frames without the selected subject are counted and skipped.
+Provide synchronized timestamps and the fields above; `body_heading` is optional. Coordinates are used without shifting, rotation, interpolation, or rounding. 
 
 ### CSV outputs
 
-Both workflows write the selected CSV and a `<output>.config.json` file recording the effective settings. Export is integrated; no separate export script is required.
+Both workflows write the selected CSV and a `<output>.config.json` file recording the effective settings.
 
 | Fields | Meaning |
 |---|---|
@@ -281,7 +265,7 @@ Blank CEDI means unscored or unavailable, not zero risk. Detailed nested respons
 
 ### Core CEDI API status values
 
-These statuses describe the core API. The vehicle CSV workflow first applies RCD screening and uses `skipped_rcd_...` with blank CEDI for unscored pairs, as explained above.
+The vehicle CSV workflow first applies RCD screening and uses `skipped_rcd_...` with blank CEDI for unscored pairs, as explained above.
 
 `initial_et` always refers to the initial contact forecast. The MLC remaining ET after waiting is available as `diagnostics["ET_s"]`; the vehicle conflict action duration is `diagnostics["planning_duration_s"]`.
 
@@ -297,7 +281,7 @@ These statuses describe the core API. The vehicle CSV workflow first applies RCD
 | `initial_SV_work_zone_overlap` | The subject vehicle initially overlaps the static constraint | `None` |
 | `initial_SV_road_boundary_violation` | The subject vehicle initially violates the road bounds | `None` |
 
-Failure to find an action in a finite search is not proof of physical infeasibility in continuous control space. The core in-memory API does not write files; the CSV workflows handle export.
+Failure to find an action in a finite search is not proof of physical infeasibility in continuous control space.
 
 ## Source code responsibilities
 
@@ -323,7 +307,7 @@ title: "RCD-CEDI: Reachable Conflict Detection and Constrained Evasion Difficult
 authors:
   - family-names: Li
     given-names: Jiaxin
-version: 0.1.1
+version: 0.2.0
 repository-code: "https://github.com/JiaxinTrans/RCD_CEDI"
 ```
 
